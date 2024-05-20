@@ -1,3 +1,4 @@
+import os
 import pandas as pd
 from googletrans import Translator
 
@@ -12,15 +13,17 @@ def translate_text(text, src_lang='en', dest_lang='pl'):
         return text  # Return the original text in case of error
 
 
-def translate(input_file, output_file):
-    df = pd.read_csv(input_file)
+def save_checkpoint(index):
+    with open("translation_checkpoint.txt", "w") as f:
+        f.write(str(index))
 
-    # Translate all rows in the 'review' column
-    df['review'] = df['review'].apply(translate_text)
 
-    # Save the translated data to the output CSV file
-    df.to_csv(output_file, index=False)
-    print(f"Translation completed and saved to '{output_file}'.")
+def load_checkpoint():
+    try:
+        with open("translation_checkpoint.txt", "r") as f:
+            return int(f.read())
+    except FileNotFoundError:
+        return 0
 
 
 def main():
@@ -32,14 +35,32 @@ def main():
     total_rows = len(df)
     translated_rows = 0
 
-    for i in range(0, total_rows, batch_size):
-        batch_df = df.loc[i:i+batch_size-1]
+    # Load checkpoint index
+    start_index = load_checkpoint()
+
+    if os.path.exists(output_file):
+        # If the output file already exists, load it
+        output_df = pd.read_csv(output_file)
+    else:
+        # If the output file doesn't exist, create an empty DataFrame
+        output_df = pd.DataFrame(columns=df.columns)
+
+    for i in range(start_index, total_rows, batch_size):
+        batch_df = df.loc[i:i + batch_size - 1]
         batch_df['review'] = batch_df['review'].apply(translate_text)
         translated_rows += len(batch_df)
-        print(f"{i}-{i+len(batch_df)-1} rows successfully translated.")
+        print(f"{i}-{i + len(batch_df) - 1} rows successfully translated.")
 
-    print(f"Total {translated_rows} rows translated.")
-    df.to_csv(output_file, index=False)
+        # Append translated batch to the output DataFrame
+        output_df = pd.concat([output_df, batch_df], ignore_index=True)
+
+        # Update checkpoint index
+        save_checkpoint(i + batch_size)
+
+        # Save the updated DataFrame to the output file
+        output_df.to_csv(output_file, index=False)
+        print(f"Translated batch saved to '{output_file}'.")
+
     print(f"Translation completed and saved to '{output_file}'.")
 
 
