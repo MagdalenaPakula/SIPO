@@ -1,6 +1,7 @@
 import os
 import pandas as pd
 from googletrans import Translator
+from concurrent.futures import ThreadPoolExecutor
 
 
 def translate_text(text, src_lang='en', dest_lang='pl'):
@@ -26,12 +27,18 @@ def load_checkpoint():
         return 0
 
 
+def translate_batch(df, start_index, batch_size):
+    batch_df = df.loc[start_index:start_index + batch_size - 1]
+    batch_df['review'] = batch_df['review'].apply(translate_text)
+    return batch_df
+
+
 def main():
     input_file = '../../data/raw/IMDB_Dataset.csv'
     output_file = '../../data/processed/Translated_IMDB_Dataset.csv'
     df = pd.read_csv(input_file)
 
-    batch_size = 10
+    batch_size = 20
     total_rows = len(df)
     translated_rows = 0
 
@@ -45,21 +52,25 @@ def main():
         # If the output file doesn't exist, create an empty DataFrame
         output_df = pd.DataFrame(columns=df.columns)
 
-    for i in range(start_index, total_rows, batch_size):
-        batch_df = df.loc[i:i + batch_size - 1]
-        batch_df['review'] = batch_df['review'].apply(translate_text)
-        translated_rows += len(batch_df)
-        print(f"{i}-{i + len(batch_df) - 1} rows successfully translated.")
+    with ThreadPoolExecutor(max_workers=4) as executor:
+        futures = []
+        for i in range(start_index, total_rows, batch_size):
+            futures.append(executor.submit(translate_batch, df, i, batch_size))
 
-        # Append translated batch to the output DataFrame
-        output_df = pd.concat([output_df, batch_df], ignore_index=True)
+        for future in futures:
+            batch_df = future.result()
+            translated_rows += len(batch_df)
+            print(f"{batch_df.index[0]}-{batch_df.index[-1]} rows successfully translated.")
 
-        # Update checkpoint index
-        save_checkpoint(i + batch_size)
+            # Append translated batch to the output DataFrame
+            output_df = pd.concat([output_df, batch_df], ignore_index=True)
 
-        # Save the updated DataFrame to the output file
-        output_df.to_csv(output_file, index=False)
-        print(f"Translated batch saved to '{output_file}'.")
+            # Update checkpoint index
+            save_checkpoint(batch_df.index[-1] + 1)
+
+            # Save the updated DataFrame to the output file
+            output_df.to_csv(output_file, index=False)
+            print(f"Translated batch saved to '{output_file}'.")
 
     print(f"Translation completed and saved to '{output_file}'.")
 
