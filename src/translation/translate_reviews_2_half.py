@@ -56,7 +56,7 @@ def main():
         futures = []
         for i in range(start_index, total_rows, batch_size):
             futures.append(executor.submit(translate_batch, df, i, batch_size))
-
+            
         for future in futures:
             batch_df = future.result()
             translated_rows += len(batch_df)
