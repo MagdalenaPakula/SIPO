@@ -1,0 +1,23 @@
+import sys
+import os
+
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+from tools import load
+
+from torch.utils.data import Dataset
+
+class CustomDataset(Dataset):
+    def __init__(self, data=None, targets=None, data_path=None):
+        if data_path:
+            self.data, self.targets = load(data_path)
+        else:
+            self.data = data
+            self.targets = targets
+
+    def __len__(self):
+        return len(self.data)
+
+    def __getitem__(self, index):
+        sample = self.data[index]
+        label = self.targets[index]
+        return sample, label
