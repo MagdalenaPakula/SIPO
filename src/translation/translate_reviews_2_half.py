@@ -15,7 +15,7 @@ def translate_text(text, src_lang='en', dest_lang='pl'):
 
 
 def save_checkpoint(index):
-    with open("translation_checkpoint.txt_2_half", "w") as f:
+    with open("translation_checkpoint_2_half.txt", "w") as f:
         f.write(str(index))
 
 
