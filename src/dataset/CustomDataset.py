@@ -17,12 +17,6 @@ class CustomDataset(Dataset):
             self.targets = targets
         self.tokenizer = tokenizer
 
-    def load(self, data_path):
-        df = pd.read_csv(data_path)
-        data = df['review'].tolist()
-        targets = df['sentiment'].tolist()
-        return data, targets
-
     def __len__(self):
         return len(self.data)
 
