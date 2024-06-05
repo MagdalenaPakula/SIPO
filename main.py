@@ -14,7 +14,7 @@ if __name__ == '__main__':
 
     X = TF_IDF(dataset.data)
 
-    X_train, X_test, y_train, y_test = train_test_split(X, dataset.targets, test_size=0.5)
+    X_train, X_test, y_train, y_test = train_test_split(X, dataset.targets, test_size=0.5, random_state=42)
 
     train_dataset = CustomDataset(data=X_train, targets=y_train)
     test_dataset = CustomDataset(data=X_test, targets=y_test)
@@ -29,5 +29,5 @@ if __name__ == '__main__':
 
     # Save the trained model
     print("Saving the model...")
-    joblib.dump(clf, 'src/models/model_TF_SVM.joblib')
+    joblib.dump(clf, 'model_TF_SVM.joblib')
     print("Model saved as: model_TF_SVM.joblib")
