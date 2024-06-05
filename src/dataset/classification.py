@@ -28,13 +28,4 @@ class Classification():
         self.model = clf
 
     def test(self, data):
-        # evaluate
-        self.model.eval()
-
-        # predict
-        with torch.no_grad():
-            output = self.model(**data)
-            logits = output.logits
-            predictions = torch.argmax(logits, dim=1)
-
-        return predictions.numpy()
+        return self.model.predict(data)
