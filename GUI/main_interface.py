@@ -1,11 +1,7 @@
 import tkinter as tk
-from tkinter import ttk
-import time
+import joblib
 
-# Load model
-# import trained_model.
-#
-# model = trained_model.load_model()
+model = joblib.load('model.joblib')
 
 
 def process_text():
@@ -17,12 +13,12 @@ def process_text():
     result_label.config(text="Processing, please wait...")
     root.update()
 
-    # sentiment, reason = model.classify(text)
+    sentiment, reason = model.classify(text)
 
-    # if sentiment == "positive":
-    #     result_label.config(text=f"The text is positive.\nReason: {reason}")
-    # else:
-    #     result_label.config(text=f"The text is negative.\nReason: {reason}")
+    if sentiment == "positive":
+        result_label.config(text=f"The text is positive.\nReason: {reason}")
+    else:
+        result_label.config(text=f"The text is negative.\nReason: {reason}")
 
 
 def clear_text():

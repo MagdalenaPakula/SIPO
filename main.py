@@ -12,7 +12,7 @@ if __name__ == '__main__':
     print("Loading the data...")
     dataset = CustomDataset(data_path="data/processed/Translated_IMDB_Dataset_PROCESSED.csv")
 
-    X = TF_IDF(dataset.data)
+    X, vectorizer = TF_IDF(dataset.data)
 
     X_train, X_test, y_train, y_test = train_test_split(X, dataset.targets, test_size=0.5, random_state=42)
 
@@ -28,7 +28,9 @@ if __name__ == '__main__':
     result = clf.test(test_dataset.data)
     print(classification_report(test_dataset.targets, result))
 
-    # Save the trained model
-    print("Saving the model...")
-    joblib.dump(clf, 'model_TF_SVM.joblib')
-    print("Model saved as: model_TF_SVM.joblib")
+    # Save the trained model and the vectorizer
+    print("Saving the model and vectorizer...")
+    joblib.dump(clf, 'model.joblib')
+    joblib.dump(vectorizer, 'vectorizer.joblib')
+    print("Model saved as: model.joblib")
+    print("Vectorizer saved as: vectorizer.joblib")
