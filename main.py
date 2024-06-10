@@ -21,8 +21,8 @@ if __name__ == '__main__':
 
     clf = Classification()
     print("Training the model...")
-    for _ in tqdm(range(100)):
-        clf.SVM_train(train_dataset)
+    # for _ in tqdm(range(100)):
+    clf.SVM_train(train_dataset)
 
     print("Testing the model...")
     result = clf.test(test_dataset.data)
