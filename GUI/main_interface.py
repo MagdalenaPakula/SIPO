@@ -1,24 +1,26 @@
 import tkinter as tk
 import joblib
 
-model = joblib.load('model.joblib')
+vectorizer = joblib.load('../vectorizer.joblib')
+model = joblib.load('../model.joblib')
 
 
 def process_text():
-    text = text_input.get("1.0", "end-1c")
-    if not text.strip():
+    text_in = text_input.get("1.0", "end-1c")
+    if not text_in.strip():
         result_label.config(text="Please enter some text.")
         return
 
     result_label.config(text="Processing, please wait...")
     root.update()
 
-    sentiment, reason = model.classify(text)
+    sentiment = model.predict(vectorizer.transform([str(text_in)]))
+    print(sentiment)
 
     if sentiment == "positive":
-        result_label.config(text=f"The text is positive.\nReason: {reason}")
+        result_label.config(text=f"The text is positive.")
     else:
-        result_label.config(text=f"The text is negative.\nReason: {reason}")
+        result_label.config(text=f"The text is negative.")
 
 
 def clear_text():

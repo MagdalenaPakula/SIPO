@@ -2,7 +2,7 @@ from sklearn.feature_extraction.text import TfidfVectorizer, CountVectorizer
 
 
 def TF_IDF(data):
-    tfidf = TfidfVectorizer()
+    tfidf = TfidfVectorizer(max_features=5000)
     transformed_data = tfidf.fit_transform(data)
     return transformed_data, tfidf
 
@@ -12,6 +12,3 @@ def BoW(data):
     transformed_data = vectorizer.fit_transform(data)
     return transformed_data, vectorizer
 
-
-def WordEmbeddings(data):
-    pass

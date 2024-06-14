@@ -1,7 +1,6 @@
 import sys
 import os
 from torch.utils.data import Dataset
-import pandas as pd
 
 from src.tools import load
 
