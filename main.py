@@ -1,6 +1,7 @@
 import os
 
 import joblib
+from lime.lime_text import LimeTextExplainer
 from sklearn.metrics import accuracy_score
 
 from src.dataset.CustomDataset import CustomDataset
@@ -29,6 +30,7 @@ def train_and_save_model():
     joblib.dump(vectorizer, 'vectorizer.joblib')
 
 
+
 if __name__ == '__main__':
     if os.path.exists(model_path) and os.path.exists(vectorizer_path):
         print("Loading existing model and vectorizer...")
@@ -36,4 +38,5 @@ if __name__ == '__main__':
         vectorizer = joblib.load(vectorizer_path)
     else:
         train_and_save_model()
+
 
