@@ -1,5 +1,6 @@
-import sys
 import os
+import sys
+
 from torch.utils.data import Dataset
 
 from src.tools import load
@@ -25,6 +26,3 @@ class CustomDataset(Dataset):
         if self.tokenizer:
             sample = self.tokenizer.tokenize(sample)
         return sample, label
-
-
-

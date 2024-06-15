@@ -1,16 +1,14 @@
-from sklearn.feature_extraction.text import TfidfVectorizer
-import tensorflow as tf
-import tensorflow_hub as hub
-import tensorflow_text as text
-import torch
+from enum import Enum
+
 from sklearn.naive_bayes import MultinomialNB
 from sklearn.svm import SVC
-from enum import Enum
+
 
 class ClassificationMethod(Enum):
     NaiveBayes = 'NaiveBayes'
     SVM = 'SVM'
     BERT = 'BERT'
+
 
 class Classification():
 
@@ -32,4 +30,3 @@ class Classification():
 
     def test(self, data):
         return self.model.predict(data)
-    

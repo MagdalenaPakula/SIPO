@@ -11,4 +11,3 @@ def BoW(data):
     vectorizer = CountVectorizer()
     transformed_data = vectorizer.fit_transform(data)
     return transformed_data, vectorizer
-

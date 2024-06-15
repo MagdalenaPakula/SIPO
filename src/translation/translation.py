@@ -1,7 +1,8 @@
 import os
+from concurrent.futures import ThreadPoolExecutor
+
 import pandas as pd
 from googletrans import Translator
-from concurrent.futures import ThreadPoolExecutor
 
 # Define PATHS
 input_file = '../../data/raw/IMDB_Dataset.csv'
